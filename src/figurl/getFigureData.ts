@@ -1,5 +1,5 @@
-import { GetFigureDataRequest, isGetFigureDataResponse } from "./pluginInterface/FigurlRequestTypes"
-import sendRequestToParent from "./pluginInterface/sendRequestToParent"
+import { GetFigureDataRequest, isGetFigureDataResponse } from "./viewInterface/FigurlRequestTypes"
+import sendRequestToParent from "./viewInterface/sendRequestToParent"
 
 const getFigureData = async () => {
     const request: GetFigureDataRequest = {
