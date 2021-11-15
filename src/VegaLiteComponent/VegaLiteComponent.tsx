@@ -29,7 +29,8 @@ export const VegaLiteComponent: FunctionComponent<Props> = ({data, width, height
         <div style={{width, height}}>
             <VegaLite
                 spec={spec2}
-                actions={{export: {svg: true, png: true}}}
+                // actions={{export: {svg: true, png: true}}}
+                actions={false}
             />
         </div>
     )

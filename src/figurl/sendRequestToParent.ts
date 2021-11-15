@@ -1,31 +1,24 @@
-import { FigurlRequest, FigurlResponse } from "./FigurlRequestTypes";
+import { FigurlRequest, FigurlResponse } from "./viewInterface/FigurlRequestTypes";
+import { FigurlResponseMessage } from "./viewInterface/MessageToChildTypes";
+import { FigurlRequestMessage } from "./viewInterface/MessageToParentTypes";
+import sendMessageToParent from "./sendMessageToParent";
+
+const urlSearchParams = new URLSearchParams(window.location.search)
+const queryParams = Object.fromEntries(urlSearchParams.entries())
 
 const pendingRequests: {[key: string]: {
     onResponse: (response: FigurlResponse) => void
     onError: (err: any) => void
 }} = {}
 
-window.addEventListener('message', e => {
-    const msg = e.data
-    let x
-    try {
-        x = JSON.parse(msg)
+export const handleFigurlResponse = (msg: FigurlResponseMessage) => {
+    const requestId = msg.requestId
+    const response = msg.response
+    if (requestId in pendingRequests) {
+        pendingRequests[requestId].onResponse(response)
+        delete pendingRequests[requestId]
     }
-    catch(err) {
-        return
-    }
-    if (x.type === 'figurlResponse') {
-        const requestId = x.requestId
-        const response = x.response
-        if (requestId in pendingRequests) {
-            pendingRequests[requestId].onResponse(response)
-            delete pendingRequests[requestId]
-        }
-    }
-})
-
-const urlSearchParams = new URLSearchParams(window.location.search)
-const queryParams = Object.fromEntries(urlSearchParams.entries())
+}
 
 const sendRequestToParent = async (request: FigurlRequest) => {
     return new Promise((resolve, reject) => {
@@ -38,12 +31,13 @@ const sendRequestToParent = async (request: FigurlRequest) => {
                 reject(err)
             }
         }
-        ;(window.top as any).postMessage(JSON.stringify({
+        const msg: FigurlRequestMessage = {
             type: 'figurlRequest',
             figureId: queryParams.figureId,
             requestId,
             request
-        }), queryParams.parentOrigin)
+        }
+        sendMessageToParent(msg)
     })
 }
 
