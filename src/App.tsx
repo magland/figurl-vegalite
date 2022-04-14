@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { getFigureData, useWindowDimensions } from './figurl';
+import { getFigureData, useWindowDimensions } from './figurl2';
 import { isVegaLiteData, VegaLiteComponent, VegaLiteData } from './VegaLiteComponent/VegaLiteComponent';
 
 

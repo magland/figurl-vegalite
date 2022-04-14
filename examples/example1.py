@@ -1,7 +1,7 @@
 import altair as alt
 import numpy as np
 import pandas as pd
-import figurl as fig
+import figurl2 as fig
 
 # This script is adapted from an example on the Altair website
 n = 1000

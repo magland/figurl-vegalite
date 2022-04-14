@@ -1,5 +1,5 @@
 import { handleTaskStatusUpdate } from "./initiateTask"
-import { handleNewSubfeedMessages } from "./subfeedManager"
+import { handleNewFeedMessages } from "./feedManager"
 import { FigurlResponseMessage, isMessageToChild } from "./viewInterface/MessageToChildTypes"
 import { handleFigurlResponse } from "./sendRequestToParent"
 import { handleSetCurrentUser } from "./useSignedIn"
@@ -19,6 +19,7 @@ if (!queryParams.parentOrigin) {
 const startListeningToParent = () => {
     window.addEventListener('message', e => {
         const msg = e.data
+        if (!msg) return
         if (isMessageToChild(msg)) {
             if (msg.type === 'figurlResponse') {
                 handleFigurlResponse(msg)
@@ -26,8 +27,8 @@ const startListeningToParent = () => {
             else if (msg.type === 'taskStatusUpdate') {
                 handleTaskStatusUpdate(msg)
             }
-            else if (msg.type === 'newSubfeedMessages') {
-                handleNewSubfeedMessages(msg)
+            else if (msg.type === 'newFeedMessages') {
+                handleNewFeedMessages(msg)
             }
             else if (msg.type === 'setCurrentUser') {
                 handleSetCurrentUser({userId: msg.userId, googleIdToken: msg.googleIdToken})
@@ -55,7 +56,7 @@ const startListeningToParent = () => {
                     window.postMessage(msg2, '*')
                 }
                 else if (req.type === 'getFileData') {
-                    const fileData = (window as any).figurlData.sha1[req.sha1.toString()]
+                    const fileData = (window as any).figurlData.uri[req.uri]
                     const resp: GetFileDataResponse = {
                         type: 'getFileData',
                         fileData
@@ -70,7 +71,7 @@ const startListeningToParent = () => {
                 else if (req.type === 'initiateTask') {
                     console.warn(`Unable to handle request of type ${req.type} for self-contained figures`)
                 }
-                else if (req.type === 'subscribeToSubfeed') {
+                else if (req.type === 'subscribeToFeed') {
                     console.warn(`Unable to handle request of type ${req.type} for self-contained figures`)
                 }
             }
