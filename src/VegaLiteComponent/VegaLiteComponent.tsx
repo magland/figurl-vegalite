@@ -1,6 +1,6 @@
+import { validateObject } from '@figurl/core-utils';
 import { FunctionComponent, useMemo } from 'react';
 import { VegaLite } from 'react-vega'
-import { validateObject } from '../figurl2';
 
 // See https://github.com/vega/react-vega/issues/85#issuecomment-795138175
 import './VegaLiteComponent.css'
